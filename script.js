@@ -1,70 +1,130 @@
-// Tabs
+// ── TABS ─────────────────────────────────
 function showTab(name) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('panel-' + name).classList.add('active');
+
+  const labels = {
+    stack:'⬆ Stack',
+    queue:'➡ Queue',
+    bubble:'⟳ Bubble Sort',
+    selection:'✦ Selection Sort'
+  };
+
+  document.querySelectorAll('.tab').forEach(t => {
+    if (t.textContent.trim() === labels[name]) t.classList.add('active');
+  });
 }
 
-// STACK
-let stack = [];
+// ── STACK ────────────────────────────────
+const CLRS = ['c0','c1','c2','c3','c4','c5'];
+let stack = [], sColorIdx = 0;
+
+function renderStack(msg) {
+  const vis = document.getElementById('stack-visual');
+  vis.innerHTML = stack.length === 0
+    ? '<span class="empty-note">// stack is empty</span>'
+    : '';
+
+  stack.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'ds-item ' + item.c;
+    el.textContent = item.v;
+    vis.appendChild(el);
+  });
+
+  document.getElementById('stack-step').textContent = msg;
+}
 
 function stackPush() {
-  const v = document.getElementById('stack-val').value;
-  stack.push(v);
-  renderStack("Pushed " + v);
+  const v = document.getElementById('stack-val').value.trim();
+  if (!v) return;
+  stack.push({ v, c: CLRS[sColorIdx++ % CLRS.length] });
+  renderStack(`Pushed ${v}`);
 }
 
 function stackPop() {
   if (!stack.length) return;
-  const v = stack.pop();
-  renderStack("Popped " + v);
+  const item = stack.pop();
+  renderStack(`Popped ${item.v}`);
 }
 
 function stackReset() {
   stack = [];
-  renderStack("Reset");
+  sColorIdx = 0;
+  renderStack('Reset');
 }
 
-function renderStack(msg) {
-  document.getElementById('stack-visual').innerHTML = stack.join(" , ");
-  document.getElementById('stack-step').innerText = msg;
-}
+// ── QUEUE ────────────────────────────────
+let queue = [], qColorIdx = 0;
 
-// QUEUE
-let queue = [];
+function renderQueue(msg) {
+  const vis = document.getElementById('queue-visual');
+  vis.innerHTML = queue.length === 0
+    ? '<span class="empty-note">// queue is empty</span>'
+    : '';
+
+  queue.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'ds-item ' + item.c;
+    el.textContent = item.v;
+    vis.appendChild(el);
+  });
+
+  document.getElementById('queue-step').textContent = msg;
+}
 
 function queueEnqueue() {
-  const v = document.getElementById('queue-val').value;
-  queue.push(v);
-  renderQueue("Enqueued " + v);
+  const v = document.getElementById('queue-val').value.trim();
+  if (!v) return;
+  queue.push({ v, c: CLRS[qColorIdx++ % CLRS.length] });
+  renderQueue(`Enqueued ${v}`);
 }
 
 function queueDequeue() {
   if (!queue.length) return;
-  const v = queue.shift();
-  renderQueue("Dequeued " + v);
+  const item = queue.shift();
+  renderQueue(`Dequeued ${item.v}`);
 }
 
 function queueReset() {
   queue = [];
-  renderQueue("Reset");
+  qColorIdx = 0;
+  renderQueue('Reset');
 }
 
-function renderQueue(msg) {
-  document.getElementById('queue-visual').innerHTML = queue.join(" , ");
-  document.getElementById('queue-step').innerText = msg;
+// ── SORT HELPERS ─────────────────────────
+function makeArr(n = 14) {
+  return Array.from({ length: n }, () => Math.floor(Math.random() * 80) + 12);
 }
 
-// SORT HELPERS
-function makeArr(n = 10) {
-  return Array.from({ length: n }, () => Math.floor(Math.random() * 100));
+function delay(ms) {
+  return new Promise(r => setTimeout(r, ms));
 }
 
-// BUBBLE SORT
+function getMs(id) {
+  return Math.round(720 / parseInt(document.getElementById(id).value));
+}
+
+function drawBars(containerId, arr) {
+  const wrap = document.getElementById(containerId);
+  wrap.innerHTML = '';
+  const mx = Math.max(...arr);
+
+  arr.forEach(v => {
+    const bar = document.createElement('div');
+    bar.className = 'bar default';
+    bar.style.height = Math.round((v / mx) * 170) + 'px';
+    wrap.appendChild(bar);
+  });
+}
+
+// ── BUBBLE SORT ─────────────────────────
 let bArr = makeArr();
 
 function bubbleShuffle() {
   bArr = makeArr();
-  drawBars("bubble-bars", bArr);
+  drawBars('bubble-bars', bArr);
 }
 
 function bubbleReset() {
@@ -76,19 +136,19 @@ async function bubbleToggle() {
     for (let j = 0; j < bArr.length - i - 1; j++) {
       if (bArr[j] > bArr[j + 1]) {
         [bArr[j], bArr[j + 1]] = [bArr[j + 1], bArr[j]];
-        drawBars("bubble-bars", bArr);
-        await new Promise(r => setTimeout(r, 200));
+        drawBars('bubble-bars', bArr);
+        await delay(200);
       }
     }
   }
 }
 
-// SELECTION SORT
+// ── SELECTION SORT ──────────────────────
 let sArr = makeArr();
 
 function selShuffle() {
   sArr = makeArr();
-  drawBars("sel-bars", sArr);
+  drawBars('sel-bars', sArr);
 }
 
 function selReset() {
@@ -102,26 +162,11 @@ async function selToggle() {
       if (sArr[j] < sArr[min]) min = j;
     }
     [sArr[i], sArr[min]] = [sArr[min], sArr[i]];
-    drawBars("sel-bars", sArr);
-    await new Promise(r => setTimeout(r, 200));
+    drawBars('sel-bars', sArr);
+    await delay(200);
   }
 }
 
-// DRAW BARS
-function drawBars(id, arr) {
-  const el = document.getElementById(id);
-  el.innerHTML = "";
-  arr.forEach(v => {
-    const bar = document.createElement("div");
-    bar.style.height = v + "px";
-    bar.style.width = "20px";
-    bar.style.display = "inline-block";
-    bar.style.margin = "2px";
-    bar.style.background = "purple";
-    el.appendChild(bar);
-  });
-}
-
-// init
+// INIT
 bubbleShuffle();
 selShuffle();
