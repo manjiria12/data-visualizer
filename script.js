@@ -1,143 +1,127 @@
-class DataStructuresVisualizer {
-    constructor() {
-        this.array = [];
-        this.stack = [];
-        this.queue = [];
-        this.isSorting = false;
-        this.isPaused = false;
-        this.animationSpeed = 100;
-        this.sortingBars = [];
-        
-        this.init();
+// Tabs
+function showTab(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+}
+
+// STACK
+let stack = [];
+
+function stackPush() {
+  const v = document.getElementById('stack-val').value;
+  stack.push(v);
+  renderStack("Pushed " + v);
+}
+
+function stackPop() {
+  if (!stack.length) return;
+  const v = stack.pop();
+  renderStack("Popped " + v);
+}
+
+function stackReset() {
+  stack = [];
+  renderStack("Reset");
+}
+
+function renderStack(msg) {
+  document.getElementById('stack-visual').innerHTML = stack.join(" , ");
+  document.getElementById('stack-step').innerText = msg;
+}
+
+// QUEUE
+let queue = [];
+
+function queueEnqueue() {
+  const v = document.getElementById('queue-val').value;
+  queue.push(v);
+  renderQueue("Enqueued " + v);
+}
+
+function queueDequeue() {
+  if (!queue.length) return;
+  const v = queue.shift();
+  renderQueue("Dequeued " + v);
+}
+
+function queueReset() {
+  queue = [];
+  renderQueue("Reset");
+}
+
+function renderQueue(msg) {
+  document.getElementById('queue-visual').innerHTML = queue.join(" , ");
+  document.getElementById('queue-step').innerText = msg;
+}
+
+// SORT HELPERS
+function makeArr(n = 10) {
+  return Array.from({ length: n }, () => Math.floor(Math.random() * 100));
+}
+
+// BUBBLE SORT
+let bArr = makeArr();
+
+function bubbleShuffle() {
+  bArr = makeArr();
+  drawBars("bubble-bars", bArr);
+}
+
+function bubbleReset() {
+  bubbleShuffle();
+}
+
+async function bubbleToggle() {
+  for (let i = 0; i < bArr.length; i++) {
+    for (let j = 0; j < bArr.length - i - 1; j++) {
+      if (bArr[j] > bArr[j + 1]) {
+        [bArr[j], bArr[j + 1]] = [bArr[j + 1], bArr[j]];
+        drawBars("bubble-bars", bArr);
+        await new Promise(r => setTimeout(r, 200));
+      }
     }
+  }
+}
 
-    init() {
-        this.bindEvents();
-        this.setupTabs();
-        this.generateInitialArray();
-        this.renderStack();
-        this.renderQueue();
+// SELECTION SORT
+let sArr = makeArr();
+
+function selShuffle() {
+  sArr = makeArr();
+  drawBars("sel-bars", sArr);
+}
+
+function selReset() {
+  selShuffle();
+}
+
+async function selToggle() {
+  for (let i = 0; i < sArr.length; i++) {
+    let min = i;
+    for (let j = i + 1; j < sArr.length; j++) {
+      if (sArr[j] < sArr[min]) min = j;
     }
+    [sArr[i], sArr[min]] = [sArr[min], sArr[i]];
+    drawBars("sel-bars", sArr);
+    await new Promise(r => setTimeout(r, 200));
+  }
+}
 
-    bindEvents() {
-        // Tab switching
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => this.switchTab(e.target.dataset.tab));
-        });
+// DRAW BARS
+function drawBars(id, arr) {
+  const el = document.getElementById(id);
+  el.innerHTML = "";
+  arr.forEach(v => {
+    const bar = document.createElement("div");
+    bar.style.height = v + "px";
+    bar.style.width = "20px";
+    bar.style.display = "inline-block";
+    bar.style.margin = "2px";
+    bar.style.background = "purple";
+    el.appendChild(bar);
+  });
+}
 
-        // Sorting controls
-        document.getElementById('generateArray').onclick = () => this.generateArray();
-        document.getElementById('bubbleSortBtn').onclick = () => this.bubbleSort();
-        document.getElementById('selectionSortBtn').onclick = () => this.selectionSort();
-        document.getElementById('resetArray').onclick = () => this.resetArray();
-        document.getElementById('pauseBtn').onclick = () => this.togglePause();
-
-        document.getElementById('speedSlider').oninput = (e) => {
-            this.animationSpeed = parseInt(e.target.value);
-            document.getElementById('speedValue').textContent = this.animationSpeed + 'ms';
-        };
-
-        // Stack controls
-        document.getElementById('stackPush').onclick = () => this.stackPush();
-        document.getElementById('stackPop').onclick = () => this.stackPop();
-        document.getElementById('stackReset').onclick = () => this.stackReset();
-
-        // Queue controls
-        document.getElementById('queueEnqueue').onclick = () => this.queueEnqueue();
-        document.getElementById('queueDequeue').onclick = () => this.queueDequeue();
-        document.getElementById('queueReset').onclick = () => this.queueReset();
-    }
-
-    switchTab(tabName) {
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-        event.target.classList.add('active');
-        document.getElementById(tabName).classList.add('active');
-        
-        const tabNames = {
-            sorting: 'Sorting Visualizer',
-            stack: 'Stack (LIFO)',
-            queue: 'Queue (FIFO)'
-        };
-        this.updateExplanation(`🔄 Switched to ${tabNames[tabName]}!`);
-    }
-
-    // === SORTING ===
-    generateArray() {
-        this.array = Array.from({length: 30}, () => Math.floor(Math.random() * 80) + 20);
-        this.renderSortingArray();
-        this.updateExplanation('🎲 Generated new random array!\nReady for sorting algorithms.');
-    }
-
-    generateInitialArray() {
-        this.generateArray();
-    }
-
-    renderSortingArray() {
-        const canvas = document.getElementById('sortingCanvas');
-        canvas.innerHTML = '';
-        this.sortingBars = [];
-
-        const maxHeight = 350;
-        const maxValue = Math.max(...this.array);
-
-        this.array.forEach((value, index) => {
-            const bar = document.createElement('div');
-            bar.className = 'sorting-bar';
-            bar.style.height = `${(value / maxValue) * maxHeight}px`;
-            bar.style.width = `${90 / this.array.length}%`;
-            bar.dataset.index = index;
-            bar.textContent = value;
-            canvas.appendChild(bar);
-            this.sortingBars.push(bar);
-        });
-    }
-
-    async sleep(ms) {
-        while (this.isPaused && this.isSorting) {
-            await new Promise(resolve => setTimeout(resolve, 100));
-        }
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    async bubbleSort() {
-        if (this.isSorting) return;
-        this.isSorting = true;
-        this.generateArray();
-        
-        this.updateExplanation('🫧 BUBBLE SORT STARTED\n• Compares adjacent elements\n• Swaps if out of order\n• Largest bubbles to end');
-
-        for (let i = 0; i < this.array.length - 1; i++) {
-            let swapped = false;
-            for (let j = 0; j < this.array.length - i - 1; j++) {
-                this.markComparing(j, j + 1);
-                await this.sleep(this.animationSpeed);
-
-                if (this.array[j] > this.array[j + 1]) {
-                    this.updateExplanation(`🔄 SWAP: ${this.array[j]} > ${this.array[j + 1]}\nSwapping positions ${j} and ${j + 1}`);
-                    this.swap(j, j + 1);
-                    swapped = true;
-                    await this.sleep(this.animationSpeed * 1.5);
-                }
-                this.clearMarks();
-            }
-            if (!swapped) break;
-        }
-
-        this.markSorted();
-        this.isSorting = false;
-        this.updateExplanation('✅ BUBBLE SORT COMPLETED!\nTime Complexity: O(n²)');
-    }
-
-    async selectionSort() {
-        if (this.isSorting) return;
-        this.isSorting = true;
-        this.generateArray();
-        
-        this.updateExplanation('🔍 SELECTION SORT STARTED\n• Finds minimum in unsorted portion\n• Swaps with first unsorted element');
-
-        for (let i = 0; i < this.array.length - 1; i++) {
-            let minIdx = i;
-            for (let j = i + 1; j < this.array.length; j++) {
-                this.markComparing(minIdx, j);
-               
+// init
+bubbleShuffle();
+selShuffle();
