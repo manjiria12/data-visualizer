@@ -3,38 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Structures Visualizer</title>
+    <title>📊 Data Structures Visualizer</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <header class="header">
             <h1>📊 Data Structures Visualizer</h1>
             <p>Learn DSA through Interactive Animations</p>
         </header>
 
-        <!-- Navigation Tabs -->
         <nav class="tabs">
             <button class="tab-btn active" data-tab="sorting">📊 Sorting</button>
             <button class="tab-btn" data-tab="stack">📦 Stack</button>
             <button class="tab-btn" data-tab="queue">🚶 Queue</button>
         </nav>
 
-        <!-- Main Content -->
         <main class="main-content">
             <!-- Sorting Tab -->
             <div id="sorting" class="tab-content active">
                 <div class="controls">
-                    <button id="generateArray">Generate Array</button>
-                    <button id="bubbleSortBtn">Bubble Sort</button>
-                    <button id="selectionSortBtn">Selection Sort</button>
-                    <button id="resetArray">Reset</button>
+                    <button id="generateArray">🎲 Generate Array</button>
+                    <button id="bubbleSortBtn">🫧 Bubble Sort</button>
+                    <button id="selectionSortBtn">🔍 Selection Sort</button>
+                    <button id="resetArray">🔄 Reset</button>
                     <div class="speed-control">
                         <label>Speed: </label>
-                        <input type="range" id="speedSlider" min="10" max="1000" value="50">
-                        <span id="speedValue">50ms</span>
+                        <input type="range" id="speedSlider" min="10" max="500" value="100">
+                        <span id="speedValue">100ms</span>
                     </div>
                     <button id="pauseBtn">⏸️ Pause</button>
                 </div>
@@ -47,12 +44,12 @@
             <div id="stack" class="tab-content">
                 <div class="controls">
                     <input type="number" id="stackInput" placeholder="Enter value (1-99)" min="1" max="99">
-                    <button id="stackPush">Push</button>
-                    <button id="stackPop">Pop</button>
-                    <button id="stackReset">Reset</button>
+                    <button id="stackPush">⬆️ Push</button>
+                    <button id="stackPop">⬇️ Pop</button>
+                    <button id="stackReset">🔄 Reset</button>
                 </div>
                 <div class="visualizer">
-                    <div id="stackCanvas" class="canvas"></div>
+                    <div id="stackCanvas" class="canvas stack-container"></div>
                 </div>
             </div>
 
@@ -60,25 +57,23 @@
             <div id="queue" class="tab-content">
                 <div class="controls">
                     <input type="number" id="queueInput" placeholder="Enter value (1-99)" min="1" max="99">
-                    <button id="queueEnqueue">Enqueue</button>
-                    <button id="queueDequeue">Dequeue</button>
-                    <button id="queueReset">Reset</button>
+                    <button id="queueEnqueue">➡️ Enqueue</button>
+                    <button id="queueDequeue">⬅️ Dequeue</button>
+                    <button id="queueReset">🔄 Reset</button>
                 </div>
                 <div class="visualizer">
-                    <div id="queueCanvas" class="canvas"></div>
+                    <div id="queueCanvas" class="canvas queue-container"></div>
                 </div>
             </div>
         </main>
 
-        <!-- Explanation Panel -->
         <div class="explanation-panel">
-            <h3>📝 Explanation</h3>
-            <div id="explanationText">Select a tab and perform an operation to see step-by-step explanation!</div>
+            <h3>📝 Step-by-Step Explanation</h3>
+            <div id="explanationText">👋 Welcome! Click any button to see visual animations and explanations!</div>
         </div>
 
-        <!-- Footer -->
         <footer class="footer">
-            <p>Made with ❤️ for DSA Learners | GitHub Pages Hosted</p>
+            <p>🚀 Made for DSA Learners | Hosted on GitHub Pages</p>
         </footer>
     </div>
 
