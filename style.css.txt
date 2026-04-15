@@ -1,71 +1,148 @@
-let array = [];
-let originalArray = [];
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-function generateArray() {
-    array = [];
-    for (let i = 0; i < 20; i++) {
-        array.push(Math.floor(Math.random() * 100) + 10);
+/* BODY */
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1f1c2c, #928dab);
+    color: white;
+    text-align: center;
+}
+
+/* TITLE */
+h1 {
+    margin-top: 20px;
+    font-size: 32px;
+}
+
+/* MENU */
+.menu {
+    margin: 20px;
+}
+
+.menu button {
+    padding: 10px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 8px;
+    background: #ff7a18;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.menu button:hover {
+    background: #ffb347;
+}
+
+/* CONTROLS */
+.controls {
+    margin: 20px;
+}
+
+button {
+    padding: 10px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 8px;
+    background: #00adb5;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #00e5ff;
+}
+
+/* INPUT BOX */
+input {
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    margin-right: 5px;
+}
+
+/* SORTING BARS */
+#array {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 300px;
+    margin-top: 20px;
+}
+
+.bar {
+    width: 20px;
+    margin: 2px;
+    background: #00e676;
+    transition: all 0.3s ease;
+}
+
+/* STACK & QUEUE CONTAINER */
+#stackContainer,
+#queueContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+}
+
+/* BOX (STACK & QUEUE ITEMS) */
+.box {
+    width: 45px;
+    height: 45px;
+    margin: 5px;
+    background: #ff5722;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+/* BOX HOVER */
+.box:hover {
+    transform: scale(1.1);
+}
+
+/* SECTIONS */
+.section {
+    margin-top: 20px;
+}
+
+/* EXPLANATION PANEL */
+#explanation {
+    margin-top: 30px;
+    font-size: 18px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+/* SLIDER */
+input[type="range"] {
+    width: 150px;
+}
+
+/* RESPONSIVE (MOBILE) */
+@media (max-width: 600px) {
+    .bar {
+        width: 10px;
     }
-    originalArray = [...array];
-    renderArray();
-}
 
-function renderArray() {
-    const container = document.getElementById("array");
-    container.innerHTML = "";
-
-    array.forEach(value => {
-        const bar = document.createElement("div");
-        bar.classList.add("bar");
-        bar.style.height = value + "px";
-        container.appendChild(bar);
-    });
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-async function bubbleSort() {
-    let speed = document.getElementById("speed").value;
-
-    for (let i = 0; i < array.length; i++) {
-        for (let j = 0; j < array.length - i - 1; j++) {
-
-            document.getElementById("explanation").innerText =
-                `Comparing ${array[j]} and ${array[j+1]}`;
-
-            highlightBars(j, j + 1, "red");
-
-            await sleep(speed);
-
-            if (array[j] > array[j + 1]) {
-                document.getElementById("explanation").innerText =
-                    `Swapping ${array[j]} and ${array[j+1]}`;
-
-                [array[j], array[j + 1]] = [array[j + 1], array[j]];
-
-                renderArray();
-                highlightBars(j, j + 1, "yellow");
-
-                await sleep(speed);
-            }
-        }
+    .box {
+        width: 35px;
+        height: 35px;
     }
 
-    document.getElementById("explanation").innerText = "Sorting Complete ✅";
+    h1 {
+        font-size: 24px;
+    }
 }
-
-function highlightBars(i, j, color) {
-    const bars = document.querySelectorAll(".bar");
-    bars[i].style.background = color;
-    bars[j].style.background = color;
-}
-
-function resetArray() {
-    array = [...originalArray];
-    renderArray();
-    document.getElementById("explanation").innerText = "Array reset";
-}
-
-generateArray();

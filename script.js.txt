@@ -1,42 +1,210 @@
-body {
-    text-align: center;
-    font-family: Arial;
-    background: #121212;
-    color: white;
+// -------------------- GLOBAL VARIABLES --------------------
+let array = [];
+let originalArray = [];
+let isPaused = false;
+
+let stack = [];
+let queue = [];
+
+// -------------------- SECTION SWITCH --------------------
+function showSection(section) {
+    document.getElementById("sorting").style.display = "none";
+    document.getElementById("stack").style.display = "none";
+    document.getElementById("queue").style.display = "none";
+
+    document.getElementById(section).style.display = "block";
 }
 
-h1 {
-    margin-top: 20px;
+// -------------------- ARRAY FUNCTIONS --------------------
+function generateArray() {
+    array = [];
+    for (let i = 0; i < 20; i++) {
+        array.push(Math.floor(Math.random() * 100) + 10);
+    }
+    originalArray = [...array];
+    renderArray();
+    updateText("New array generated");
 }
 
-.controls {
-    margin: 20px;
+function renderArray() {
+    const container = document.getElementById("array");
+    container.innerHTML = "";
+
+    array.forEach(value => {
+        const bar = document.createElement("div");
+        bar.classList.add("bar");
+        bar.style.height = value + "px";
+        container.appendChild(bar);
+    });
 }
 
-button {
-    padding: 10px;
-    margin: 5px;
-    border: none;
-    background: #00adb5;
-    color: white;
-    cursor: pointer;
+// -------------------- HELPERS --------------------
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-#array {
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    height: 300px;
-    margin-top: 20px;
+async function waitWhilePaused() {
+    while (isPaused) {
+        await sleep(100);
+    }
 }
 
-.bar {
-    width: 20px;
-    margin: 2px;
-    background: #4caf50;
+function getSpeed() {
+    return document.getElementById("speed") 
+        ? document.getElementById("speed").value 
+        : 100;
 }
 
-#explanation {
-    margin-top: 20px;
-    font-size: 18px;
+function updateText(text) {
+    document.getElementById("explanation").innerText = text;
 }
+
+// -------------------- PAUSE --------------------
+function pauseSort() {
+    isPaused = !isPaused;
+    updateText(isPaused ? "Paused ⏸" : "Resumed ▶️");
+}
+
+// -------------------- BUBBLE SORT --------------------
+async function bubbleSort() {
+    let bars = document.querySelectorAll(".bar");
+
+    for (let i = 0; i < array.length; i++) {
+        for (let j = 0; j < array.length - i - 1; j++) {
+
+            await waitWhilePaused();
+
+            updateText(`Comparing ${array[j]} and ${array[j+1]}`);
+            highlightBars(j, j + 1, "red");
+
+            await sleep(getSpeed());
+
+            if (array[j] > array[j + 1]) {
+                updateText(`Swapping ${array[j]} and ${array[j+1]}`);
+
+                [array[j], array[j + 1]] = [array[j + 1], array[j]];
+                renderArray();
+
+                highlightBars(j, j + 1, "yellow");
+                await sleep(getSpeed());
+            }
+        }
+    }
+
+    updateText("Sorting Complete ✅");
+}
+
+// -------------------- SELECTION SORT --------------------
+async function selectionSort() {
+    for (let i = 0; i < array.length; i++) {
+
+        let min = i;
+
+        for (let j = i + 1; j < array.length; j++) {
+
+            await waitWhilePaused();
+
+            updateText(`Comparing ${array[min]} and ${array[j]}`);
+            highlightBars(min, j, "red");
+
+            await sleep(getSpeed());
+
+            if (array[j] < array[min]) {
+                min = j;
+            }
+        }
+
+        if (min !== i) {
+            updateText(`Swapping ${array[i]} and ${array[min]}`);
+
+            [array[i], array[min]] = [array[min], array[i]];
+            renderArray();
+
+            await sleep(getSpeed());
+        }
+    }
+
+    updateText("Selection Sort Complete ✅");
+}
+
+// -------------------- HIGHLIGHT --------------------
+function highlightBars(i, j, color) {
+    const bars = document.querySelectorAll(".bar");
+
+    if (bars[i]) bars[i].style.background = color;
+    if (bars[j]) bars[j].style.background = color;
+}
+
+// -------------------- RESET --------------------
+function resetArray() {
+    array = [...originalArray];
+    renderArray();
+    updateText("Array reset 🔄");
+}
+
+// -------------------- STACK --------------------
+function pushStack() {
+    let val = document.getElementById("stackValue").value;
+    if (val === "") return;
+
+    stack.push(val);
+    renderStack();
+
+    updateText(`Pushed ${val} into stack`);
+}
+
+function popStack() {
+    if (stack.length === 0) return;
+
+    let val = stack.pop();
+    renderStack();
+
+    updateText(`Popped ${val} from stack`);
+}
+
+function renderStack() {
+    let container = document.getElementById("stackContainer");
+    container.innerHTML = "";
+
+    stack.slice().reverse().forEach(v => {
+        let box = document.createElement("div");
+        box.className = "box";
+        box.innerText = v;
+        container.appendChild(box);
+    });
+}
+
+// -------------------- QUEUE --------------------
+function enqueue() {
+    let val = document.getElementById("queueValue").value;
+    if (val === "") return;
+
+    queue.push(val);
+    renderQueue();
+
+    updateText(`Enqueued ${val}`);
+}
+
+function dequeue() {
+    if (queue.length === 0) return;
+
+    let val = queue.shift();
+    renderQueue();
+
+    updateText(`Dequeued ${val}`);
+}
+
+function renderQueue() {
+    let container = document.getElementById("queueContainer");
+    container.innerHTML = "";
+
+    queue.forEach(v => {
+        let box = document.createElement("div");
+        box.className = "box";
+        box.innerText = v;
+        container.appendChild(box);
+    });
+}
+
+// -------------------- INIT --------------------
+generateArray();

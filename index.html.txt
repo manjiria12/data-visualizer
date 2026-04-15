@@ -7,21 +7,47 @@
 </head>
 <body>
 
-    <h1>📊 Data Structures Visualizer</h1>
+<h1>📊 Data Structures Visualizer</h1>
 
+<div class="menu">
+    <button onclick="showSection('sorting')">Sorting</button>
+    <button onclick="showSection('stack')">Stack</button>
+    <button onclick="showSection('queue')">Queue</button>
+</div>
+
+<!-- SORTING -->
+<div id="sorting" class="section">
     <div class="controls">
         <button onclick="generateArray()">Generate</button>
-        <button onclick="bubbleSort()">Start</button>
-        <button onclick="resetArray()">Reset</button>
-
-        <label>Speed:</label>
-        <input type="range" min="10" max="200" value="50" id="speed">
+        <button onclick="bubbleSort()">Bubble Sort</button>
+        <button onclick="selectionSort()">Selection Sort</button>
+        <button onclick="pauseSort()">Pause</button>
     </div>
-
     <div id="array"></div>
+</div>
 
-    <div id="explanation">Click Start to begin sorting</div>
+<!-- STACK -->
+<div id="stack" class="section" style="display:none;">
+    <div class="controls">
+        <input type="number" id="stackValue" placeholder="Enter value">
+        <button onclick="pushStack()">Push</button>
+        <button onclick="popStack()">Pop</button>
+    </div>
+    <div id="stackContainer"></div>
+</div>
 
-    <script src="script.js"></script>
+<!-- QUEUE -->
+<div id="queue" class="section" style="display:none;">
+    <div class="controls">
+        <input type="number" id="queueValue" placeholder="Enter value">
+        <button onclick="enqueue()">Enqueue</button>
+        <button onclick="dequeue()">Dequeue</button>
+    </div>
+    <div id="queueContainer"></div>
+</div>
+
+<div id="explanation">Ready 🚀</div>
+
+<script src="script.js"></script>
 </body>
 </html>
