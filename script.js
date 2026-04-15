@@ -1,9 +1,12 @@
 class DataStructuresVisualizer {
     constructor() {
+        this.array = [];
+        this.stack = [];
+        this.queue = [];
         this.isSorting = false;
         this.isPaused = false;
-        this.animationSpeed = 50;
-        this.currentTab = 'sorting';
+        this.animationSpeed = 100;
+        this.sortingBars = [];
         
         this.init();
     }
@@ -12,7 +15,8 @@ class DataStructuresVisualizer {
         this.bindEvents();
         this.setupTabs();
         this.generateInitialArray();
-        this.updateExplanation('Welcome! Select a tab to start learning data structures visually 🚀');
+        this.renderStack();
+        this.renderQueue();
     }
 
     bindEvents() {
@@ -22,151 +26,118 @@ class DataStructuresVisualizer {
         });
 
         // Sorting controls
-        document.getElementById('generateArray').addEventListener('click', () => this.generateArray());
-        document.getElementById('bubbleSortBtn').addEventListener('click', () => this.bubbleSort());
-        document.getElementById('selectionSortBtn').addEventListener('click', () => this.selectionSort());
-        document.getElementById('resetArray').addEventListener('click', () => this.resetArray());
-        document.getElementById('pauseBtn').addEventListener('click', () => this.togglePause());
-        document.getElementById('speedSlider').addEventListener('input', (e) => this.updateSpeed(e.target.value));
+        document.getElementById('generateArray').onclick = () => this.generateArray();
+        document.getElementById('bubbleSortBtn').onclick = () => this.bubbleSort();
+        document.getElementById('selectionSortBtn').onclick = () => this.selectionSort();
+        document.getElementById('resetArray').onclick = () => this.resetArray();
+        document.getElementById('pauseBtn').onclick = () => this.togglePause();
+
+        document.getElementById('speedSlider').oninput = (e) => {
+            this.animationSpeed = parseInt(e.target.value);
+            document.getElementById('speedValue').textContent = this.animationSpeed + 'ms';
+        };
 
         // Stack controls
-        document.getElementById('stackPush').addEventListener('click', () => this.stackPush());
-        document.getElementById('stackPop').addEventListener('click', () => this.stackPop());
-        document.getElementById('stackReset').addEventListener('click', () => this.stackReset());
+        document.getElementById('stackPush').onclick = () => this.stackPush();
+        document.getElementById('stackPop').onclick = () => this.stackPop();
+        document.getElementById('stackReset').onclick = () => this.stackReset();
 
         // Queue controls
-        document.getElementById('queueEnqueue').addEventListener('click', () => this.queueEnqueue());
-        document.getElementById('queueDequeue').addEventListener('click', () => this.queueDequeue());
-        document.getElementById('queueReset').addEventListener('click', () => this.queueReset());
+        document.getElementById('queueEnqueue').onclick = () => this.queueEnqueue();
+        document.getElementById('queueDequeue').onclick = () => this.queueDequeue();
+        document.getElementById('queueReset').onclick = () => this.queueReset();
     }
 
     switchTab(tabName) {
-        this.currentTab = tabName;
-        
-        // Update active tab
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
         event.target.classList.add('active');
         document.getElementById(tabName).classList.add('active');
         
-        this.updateExplanation(`Switched to ${tabName.charAt(0).toUpperCase() + tabName.slice(1)} tab!`);
+        const tabNames = {
+            sorting: 'Sorting Visualizer',
+            stack: 'Stack (LIFO)',
+            queue: 'Queue (FIFO)'
+        };
+        this.updateExplanation(`🔄 Switched to ${tabNames[tabName]}!`);
     }
 
     // === SORTING ===
     generateArray() {
-        const array = [];
-        const canvas = document.getElementById('sortingCanvas');
-        canvas.innerHTML = '';
-        
-        for (let i = 0; i < 25; i++) {
-            array.push(Math.floor(Math.random() * 90) + 10);
-        }
-        
-        this.renderSortingArray(array);
-        this.updateExplanation('✅ Generated random array of 25 elements!');
+        this.array = Array.from({length: 30}, () => Math.floor(Math.random() * 80) + 20);
+        this.renderSortingArray();
+        this.updateExplanation('🎲 Generated new random array!\nReady for sorting algorithms.');
     }
 
     generateInitialArray() {
         this.generateArray();
     }
 
-    renderSortingArray(array) {
+    renderSortingArray() {
         const canvas = document.getElementById('sortingCanvas');
         canvas.innerHTML = '';
-        
+        this.sortingBars = [];
+
         const maxHeight = 350;
-        const maxValue = Math.max(...array);
-        
-        array.forEach((value, index) => {
+        const maxValue = Math.max(...this.array);
+
+        this.array.forEach((value, index) => {
             const bar = document.createElement('div');
             bar.className = 'sorting-bar';
             bar.style.height = `${(value / maxValue) * maxHeight}px`;
-            bar.style.width = `${90 / array.length}%`;
+            bar.style.width = `${90 / this.array.length}%`;
+            bar.dataset.index = index;
             bar.textContent = value;
             canvas.appendChild(bar);
+            this.sortingBars.push(bar);
         });
+    }
+
+    async sleep(ms) {
+        while (this.isPaused && this.isSorting) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     async bubbleSort() {
         if (this.isSorting) return;
-        
         this.isSorting = true;
-        const array = Array.from({length: 25}, () => Math.floor(Math.random() * 90) + 10);
-        this.renderSortingArray(array);
+        this.generateArray();
         
-        this.updateExplanation('🔄 Starting Bubble Sort...\nBubble Sort compares adjacent elements and swaps them if they are in wrong order.');
-        
-        let swapped;
-        for (let i = 0; i < array.length - 1 && this.isSorting; i++) {
-            swapped = false;
-            for (let j = 0; j < array.length - i - 1 && this.isSorting; j++) {
+        this.updateExplanation('🫧 BUBBLE SORT STARTED\n• Compares adjacent elements\n• Swaps if out of order\n• Largest bubbles to end');
+
+        for (let i = 0; i < this.array.length - 1; i++) {
+            let swapped = false;
+            for (let j = 0; j < this.array.length - i - 1; j++) {
                 this.markComparing(j, j + 1);
                 await this.sleep(this.animationSpeed);
-                
-                if (array[j] > array[j + 1]) {
-                    this.updateExplanation(`🔄 Comparing ${array[j]} and ${array[j + 1]}... Swapping!`);
-                    [array[j], array[j + 1]] = [array[j + 1], array[j]];
-                    this.markSwapping(j, j + 1);
+
+                if (this.array[j] > this.array[j + 1]) {
+                    this.updateExplanation(`🔄 SWAP: ${this.array[j]} > ${this.array[j + 1]}\nSwapping positions ${j} and ${j + 1}`);
+                    this.swap(j, j + 1);
                     swapped = true;
-                    await this.sleep(this.animationSpeed);
+                    await this.sleep(this.animationSpeed * 1.5);
                 }
-                
-                this.clearMarks(j, j + 1);
+                this.clearMarks();
             }
             if (!swapped) break;
         }
-        
+
+        this.markSorted();
         this.isSorting = false;
-        this.updateExplanation('✅ Bubble Sort completed! 🎉');
+        this.updateExplanation('✅ BUBBLE SORT COMPLETED!\nTime Complexity: O(n²)');
     }
 
     async selectionSort() {
         if (this.isSorting) return;
-        
         this.isSorting = true;
-        const array = Array.from({length: 25}, () => Math.floor(Math.random() * 90) + 10);
-        this.renderSortingArray(array);
+        this.generateArray();
         
-        this.updateExplanation('🔄 Starting Selection Sort...\nSelection Sort finds minimum element in unsorted portion and places it at beginning.');
-        
-        for (let i = 0; i < array.length - 1 && this.isSorting; i++) {
+        this.updateExplanation('🔍 SELECTION SORT STARTED\n• Finds minimum in unsorted portion\n• Swaps with first unsorted element');
+
+        for (let i = 0; i < this.array.length - 1; i++) {
             let minIdx = i;
-            this.updateExplanation(`🔍 Finding minimum from index ${i} to end...`);
-            
-            for (let j = i + 1; j < array.length && this.isSorting; j++) {
+            for (let j = i + 1; j < this.array.length; j++) {
                 this.markComparing(minIdx, j);
-                await this.sleep(this.animationSpeed);
-                
-                if (array[j] < array[minIdx]) {
-                    this.clearMarks(minIdx, j);
-                    minIdx = j;
-                    this.markComparing(minIdx, j);
-                }
-            }
-            
-            if (minIdx !== i) {
-                this.updateExplanation(`🔄 Swapping ${array[i]} with minimum ${array[minIdx]} at index ${minIdx}`);
-                [array[i], array[minIdx]] = [array[minIdx], array[i]];
-                this.markSwapping(i, minIdx);
-                await this.sleep(this.animationSpeed);
-            }
-            
-            this.clearMarks(i, minIdx);
-        }
-        
-        this.isSorting = false;
-        this.updateExplanation('✅ Selection Sort completed! 🎉');
-    }
-
-    markComparing(idx1, idx2) {
-        const bars = document.querySelectorAll('.sorting-bar');
-        bars[idx1].classList.add('comparing');
-        bars[idx2].classList.add('comparing');
-    }
-
-    markSwapping(idx1, idx2) {
-        const bars = document.querySelectorAll('.sorting-bar');
-        bars[idx1].classList.remove('comparing');
-        bars[idx2].classList.remove('comparing');
-        bars[idx1].classList.add('swapping');
-        bars[idx2
+               
