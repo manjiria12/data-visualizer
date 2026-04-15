@@ -1,82 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📊 Data Structures Visualizer</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Data Structures Visualizer</title>
+
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 </head>
+
 <body>
-    <div class="container">
-        <header class="header">
-            <h1>📊 Data Structures Visualizer</h1>
-            <p>Learn DSA through Interactive Animations</p>
-        </header>
+<div class="container">
 
-        <nav class="tabs">
-            <button class="tab-btn active" data-tab="sorting">📊 Sorting</button>
-            <button class="tab-btn" data-tab="stack">📦 Stack</button>
-            <button class="tab-btn" data-tab="queue">🚶 Queue</button>
-        </nav>
-
-        <main class="main-content">
-            <!-- Sorting Tab -->
-            <div id="sorting" class="tab-content active">
-                <div class="controls">
-                    <button id="generateArray">🎲 Generate Array</button>
-                    <button id="bubbleSortBtn">🫧 Bubble Sort</button>
-                    <button id="selectionSortBtn">🔍 Selection Sort</button>
-                    <button id="resetArray">🔄 Reset</button>
-                    <div class="speed-control">
-                        <label>Speed: </label>
-                        <input type="range" id="speedSlider" min="10" max="500" value="100">
-                        <span id="speedValue">100ms</span>
-                    </div>
-                    <button id="pauseBtn">⏸️ Pause</button>
-                </div>
-                <div class="visualizer">
-                    <div id="sortingCanvas" class="canvas"></div>
-                </div>
-            </div>
-
-            <!-- Stack Tab -->
-            <div id="stack" class="tab-content">
-                <div class="controls">
-                    <input type="number" id="stackInput" placeholder="Enter value (1-99)" min="1" max="99">
-                    <button id="stackPush">⬆️ Push</button>
-                    <button id="stackPop">⬇️ Pop</button>
-                    <button id="stackReset">🔄 Reset</button>
-                </div>
-                <div class="visualizer">
-                    <div id="stackCanvas" class="canvas stack-container"></div>
-                </div>
-            </div>
-
-            <!-- Queue Tab -->
-            <div id="queue" class="tab-content">
-                <div class="controls">
-                    <input type="number" id="queueInput" placeholder="Enter value (1-99)" min="1" max="99">
-                    <button id="queueEnqueue">➡️ Enqueue</button>
-                    <button id="queueDequeue">⬅️ Dequeue</button>
-                    <button id="queueReset">🔄 Reset</button>
-                </div>
-                <div class="visualizer">
-                    <div id="queueCanvas" class="canvas queue-container"></div>
-                </div>
-            </div>
-        </main>
-
-        <div class="explanation-panel">
-            <h3>📝 Step-by-Step Explanation</h3>
-            <div id="explanationText">👋 Welcome! Click any button to see visual animations and explanations!</div>
-        </div>
-
-        <footer class="footer">
-            <p>🚀 Made for DSA Learners | Hosted on GitHub Pages</p>
-        </footer>
+  <div class="header">
+    <div class="header-top">
+      <div class="logo">DS</div>
+      <h1>Data Structures Visualizer</h1>
     </div>
+    <p class="subtitle">// interactive learning tool — stack · queue · sorting</p>
+  </div>
 
-    <script src="script.js"></script>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('stack')">⬆ Stack</button>
+    <button class="tab" onclick="showTab('queue')">➡ Queue</button>
+    <button class="tab" onclick="showTab('bubble')">⟳ Bubble Sort</button>
+    <button class="tab" onclick="showTab('selection')">✦ Selection Sort</button>
+  </div>
+
+  <!-- STACK -->
+  <div class="panel active" id="panel-stack">
+    <div class="card">
+      <div class="controls">
+        <input type="number" id="stack-val" value="42"/>
+        <button onclick="stackPush()">Push</button>
+        <button onclick="stackPop()">Pop</button>
+        <button onclick="stackReset()">Reset</button>
+      </div>
+      <div id="stack-visual"></div>
+      <div id="stack-ptr"></div>
+    </div>
+    <div id="stack-step"></div>
+  </div>
+
+  <!-- QUEUE -->
+  <div class="panel" id="panel-queue">
+    <div class="card">
+      <div class="controls">
+        <input type="number" id="queue-val" value="7"/>
+        <button onclick="queueEnqueue()">Enqueue</button>
+        <button onclick="queueDequeue()">Dequeue</button>
+        <button onclick="queueReset()">Reset</button>
+      </div>
+      <div id="queue-visual"></div>
+      <div id="queue-ptr"></div>
+    </div>
+    <div id="queue-step"></div>
+  </div>
+
+  <!-- BUBBLE SORT -->
+  <div class="panel" id="panel-bubble">
+    <button onclick="bubbleToggle()">Start</button>
+    <button onclick="bubbleReset()">Reset</button>
+    <button onclick="bubbleShuffle()">Shuffle</button>
+    <div id="bubble-bars"></div>
+  </div>
+
+  <!-- SELECTION SORT -->
+  <div class="panel" id="panel-selection">
+    <button onclick="selToggle()">Start</button>
+    <button onclick="selReset()">Reset</button>
+    <button onclick="selShuffle()">Shuffle</button>
+    <div id="sel-bars"></div>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
