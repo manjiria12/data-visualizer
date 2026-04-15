@@ -142,7 +142,23 @@ input[type="range"] {
         height: 35px;
     }
 
+<<<<<<< HEAD:style.css.txt
     h1 {
         font-size: 24px;
     }
 }
+=======
+function highlightBars(i, j, color) {
+    const bars = document.querySelectorAll(".bar");
+    bars[i].style.background = color;
+    bars[j].style.background = color;
+}
+
+function resetArray() {
+    array = [...originalArray];
+    renderArray();
+    document.getElementById("explanation").innerText = "Array reset";
+}
+
+generateArray();
+>>>>>>> 676e3a90dd932b0fa08571d05bbe8c59302817ad:style.css

@@ -55,6 +55,7 @@ function getSpeed() {
         : 100;
 }
 
+<<<<<<< HEAD:script.js.txt
 function updateText(text) {
     document.getElementById("explanation").innerText = text;
 }
@@ -208,3 +209,9 @@ function renderQueue() {
 
 // -------------------- INIT --------------------
 generateArray();
+=======
+#explanation {
+    margin-top: 20px;
+    font-size: 18px;
+}
+>>>>>>> 676e3a90dd932b0fa08571d05bbe8c59302817ad:script.js
