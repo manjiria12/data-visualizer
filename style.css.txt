@@ -1,0 +1,71 @@
+let array = [];
+let originalArray = [];
+
+function generateArray() {
+    array = [];
+    for (let i = 0; i < 20; i++) {
+        array.push(Math.floor(Math.random() * 100) + 10);
+    }
+    originalArray = [...array];
+    renderArray();
+}
+
+function renderArray() {
+    const container = document.getElementById("array");
+    container.innerHTML = "";
+
+    array.forEach(value => {
+        const bar = document.createElement("div");
+        bar.classList.add("bar");
+        bar.style.height = value + "px";
+        container.appendChild(bar);
+    });
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function bubbleSort() {
+    let speed = document.getElementById("speed").value;
+
+    for (let i = 0; i < array.length; i++) {
+        for (let j = 0; j < array.length - i - 1; j++) {
+
+            document.getElementById("explanation").innerText =
+                `Comparing ${array[j]} and ${array[j+1]}`;
+
+            highlightBars(j, j + 1, "red");
+
+            await sleep(speed);
+
+            if (array[j] > array[j + 1]) {
+                document.getElementById("explanation").innerText =
+                    `Swapping ${array[j]} and ${array[j+1]}`;
+
+                [array[j], array[j + 1]] = [array[j + 1], array[j]];
+
+                renderArray();
+                highlightBars(j, j + 1, "yellow");
+
+                await sleep(speed);
+            }
+        }
+    }
+
+    document.getElementById("explanation").innerText = "Sorting Complete ✅";
+}
+
+function highlightBars(i, j, color) {
+    const bars = document.querySelectorAll(".bar");
+    bars[i].style.background = color;
+    bars[j].style.background = color;
+}
+
+function resetArray() {
+    array = [...originalArray];
+    renderArray();
+    document.getElementById("explanation").innerText = "Array reset";
+}
+
+generateArray();

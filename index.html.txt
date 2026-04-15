@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Structures Visualizer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>📊 Data Structures Visualizer</h1>
+
+    <div class="controls">
+        <button onclick="generateArray()">Generate</button>
+        <button onclick="bubbleSort()">Start</button>
+        <button onclick="resetArray()">Reset</button>
+
+        <label>Speed:</label>
+        <input type="range" min="10" max="200" value="50" id="speed">
+    </div>
+
+    <div id="array"></div>
+
+    <div id="explanation">Click Start to begin sorting</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
