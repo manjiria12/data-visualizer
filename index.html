@@ -2,52 +2,86 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Structures Visualizer</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>📊 Data Structures Visualizer</h1>
+            <p>Learn DSA through Interactive Animations</p>
+        </header>
 
-<h1>📊 Data Structures Visualizer</h1>
+        <!-- Navigation Tabs -->
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="sorting">📊 Sorting</button>
+            <button class="tab-btn" data-tab="stack">📦 Stack</button>
+            <button class="tab-btn" data-tab="queue">🚶 Queue</button>
+        </nav>
 
-<div class="menu">
-    <button onclick="showSection('sorting')">Sorting</button>
-    <button onclick="showSection('stack')">Stack</button>
-    <button onclick="showSection('queue')">Queue</button>
-</div>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sorting Tab -->
+            <div id="sorting" class="tab-content active">
+                <div class="controls">
+                    <button id="generateArray">Generate Array</button>
+                    <button id="bubbleSortBtn">Bubble Sort</button>
+                    <button id="selectionSortBtn">Selection Sort</button>
+                    <button id="resetArray">Reset</button>
+                    <div class="speed-control">
+                        <label>Speed: </label>
+                        <input type="range" id="speedSlider" min="10" max="1000" value="50">
+                        <span id="speedValue">50ms</span>
+                    </div>
+                    <button id="pauseBtn">⏸️ Pause</button>
+                </div>
+                <div class="visualizer">
+                    <div id="sortingCanvas" class="canvas"></div>
+                </div>
+            </div>
 
-<!-- SORTING -->
-<div id="sorting" class="section">
-    <div class="controls">
-        <button onclick="generateArray()">Generate</button>
-        <button onclick="bubbleSort()">Bubble Sort</button>
-        <button onclick="selectionSort()">Selection Sort</button>
-        <button onclick="pauseSort()">Pause</button>
+            <!-- Stack Tab -->
+            <div id="stack" class="tab-content">
+                <div class="controls">
+                    <input type="number" id="stackInput" placeholder="Enter value (1-99)" min="1" max="99">
+                    <button id="stackPush">Push</button>
+                    <button id="stackPop">Pop</button>
+                    <button id="stackReset">Reset</button>
+                </div>
+                <div class="visualizer">
+                    <div id="stackCanvas" class="canvas"></div>
+                </div>
+            </div>
+
+            <!-- Queue Tab -->
+            <div id="queue" class="tab-content">
+                <div class="controls">
+                    <input type="number" id="queueInput" placeholder="Enter value (1-99)" min="1" max="99">
+                    <button id="queueEnqueue">Enqueue</button>
+                    <button id="queueDequeue">Dequeue</button>
+                    <button id="queueReset">Reset</button>
+                </div>
+                <div class="visualizer">
+                    <div id="queueCanvas" class="canvas"></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Explanation Panel -->
+        <div class="explanation-panel">
+            <h3>📝 Explanation</h3>
+            <div id="explanationText">Select a tab and perform an operation to see step-by-step explanation!</div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Made with ❤️ for DSA Learners | GitHub Pages Hosted</p>
+        </footer>
     </div>
-    <div id="array"></div>
-</div>
 
-<!-- STACK -->
-<div id="stack" class="section" style="display:none;">
-    <div class="controls">
-        <input type="number" id="stackValue" placeholder="Enter value">
-        <button onclick="pushStack()">Push</button>
-        <button onclick="popStack()">Pop</button>
-    </div>
-    <div id="stackContainer"></div>
-</div>
-
-<!-- QUEUE -->
-<div id="queue" class="section" style="display:none;">
-    <div class="controls">
-        <input type="number" id="queueValue" placeholder="Enter value">
-        <button onclick="enqueue()">Enqueue</button>
-        <button onclick="dequeue()">Dequeue</button>
-    </div>
-    <div id="queueContainer"></div>
-</div>
-
-<div id="explanation">Ready 🚀</div>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
