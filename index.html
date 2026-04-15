@@ -29,48 +29,58 @@
 
   <!-- STACK -->
   <div class="panel active" id="panel-stack">
+    <div class="sec-label">// stack — last in, first out (LIFO)</div>
     <div class="card">
       <div class="controls">
-        <input type="number" id="stack-val" value="42"/>
-        <button onclick="stackPush()">Push</button>
-        <button onclick="stackPop()">Pop</button>
-        <button onclick="stackReset()">Reset</button>
+        <input type="number" id="stack-val" value="42" min="0" max="999"/>
+        <button class="btn push" onclick="stackPush()">Push ↑</button>
+        <button class="btn pop" onclick="stackPop()">Pop ↓</button>
+        <button class="btn reset" onclick="stackReset()">Reset</button>
       </div>
-      <div id="stack-visual"></div>
-      <div id="stack-ptr"></div>
+      <div id="stack-visual" class="stack-wrap"></div>
+      <div class="pointer-row" id="stack-ptr"></div>
     </div>
-    <div id="stack-step"></div>
+    <div class="step-box" id="stack-step"></div>
   </div>
 
   <!-- QUEUE -->
   <div class="panel" id="panel-queue">
+    <div class="sec-label">// queue — first in, first out (FIFO)</div>
     <div class="card">
       <div class="controls">
-        <input type="number" id="queue-val" value="7"/>
-        <button onclick="queueEnqueue()">Enqueue</button>
-        <button onclick="queueDequeue()">Dequeue</button>
-        <button onclick="queueReset()">Reset</button>
+        <input type="number" id="queue-val" value="7" min="0" max="999"/>
+        <button class="btn push" onclick="queueEnqueue()">Enqueue →</button>
+        <button class="btn pop" onclick="queueDequeue()">Dequeue ←</button>
+        <button class="btn reset" onclick="queueReset()">Reset</button>
       </div>
-      <div id="queue-visual"></div>
-      <div id="queue-ptr"></div>
+      <div id="queue-visual" class="queue-wrap"></div>
+      <div class="pointer-row" id="queue-ptr"></div>
     </div>
-    <div id="queue-step"></div>
+    <div class="step-box" id="queue-step"></div>
   </div>
 
   <!-- BUBBLE SORT -->
   <div class="panel" id="panel-bubble">
-    <button onclick="bubbleToggle()">Start</button>
-    <button onclick="bubbleReset()">Reset</button>
-    <button onclick="bubbleShuffle()">Shuffle</button>
-    <div id="bubble-bars"></div>
+    <div class="card">
+      <button class="btn play" id="bubble-btn" onclick="bubbleToggle()">▶ Start</button>
+      <button class="btn reset" onclick="bubbleReset()">Reset</button>
+      <button class="btn" onclick="bubbleShuffle()">Shuffle</button>
+      <input type="range" min="1" max="10" value="5" id="bubble-spd"/>
+      <div class="bars-area" id="bubble-bars"></div>
+    </div>
+    <div class="step-box" id="bubble-step"></div>
   </div>
 
   <!-- SELECTION SORT -->
   <div class="panel" id="panel-selection">
-    <button onclick="selToggle()">Start</button>
-    <button onclick="selReset()">Reset</button>
-    <button onclick="selShuffle()">Shuffle</button>
-    <div id="sel-bars"></div>
+    <div class="card">
+      <button class="btn play" id="sel-btn" onclick="selToggle()">▶ Start</button>
+      <button class="btn reset" onclick="selReset()">Reset</button>
+      <button class="btn" onclick="selShuffle()">Shuffle</button>
+      <input type="range" min="1" max="10" value="5" id="sel-spd"/>
+      <div class="bars-area" id="sel-bars"></div>
+    </div>
+    <div class="step-box" id="sel-step"></div>
   </div>
 
 </div>
